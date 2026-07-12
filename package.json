@@ -1,0 +1,14 @@
+{
+  "name": "hajime-japan-electron-mockup",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Desktop Electron mockup for Hajime Japan. Prototype only; no backend or production API integrations.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "smoke": "electron scripts/smoke.js"
+  },
+  "devDependencies": {
+    "electron": "^43.1.0"
+  }
+}

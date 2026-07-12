@@ -1,0 +1,228 @@
+{
+  "company": {
+    "name": "Hajime Japan",
+    "mark": "始",
+    "tagline": "Start your Japanese business.",
+    "subline": "A quiet operating room for founders moving from intent to incorporation in Japan.",
+    "clientName": "Avery Stone",
+    "clientCompany": "Northstar Robotics K.K."
+  },
+  "pricing": [
+    {
+      "name": "DIY Blueprint",
+      "price": "$490",
+      "cadence": "one-time",
+      "description": "A self-guided setup map for founders who want the structure before engaging specialists.",
+      "features": ["Launch checklist", "Document templates", "City comparison notes", "Partner readiness guide"]
+    },
+    {
+      "name": "Guided Launch",
+      "price": "$3,800",
+      "cadence": "project",
+      "description": "Weekly guidance, partner matching, and document review through the formation track.",
+      "features": ["Dedicated launch lead", "Partner introductions", "Document review", "Timeline management"]
+    },
+    {
+      "name": "Concierge",
+      "price": "$9,500",
+      "cadence": "project",
+      "description": "Hands-on coordination across counsel, filings, capital, address, and banking readiness.",
+      "features": ["Managed partner handoffs", "Priority reviews", "Meeting preparation", "Admin coordination"]
+    },
+    {
+      "name": "Enterprise",
+      "price": "Custom",
+      "cadence": "scope",
+      "description": "A tailored setup path for larger teams, regulated activities, or multi-market expansion.",
+      "features": ["Custom roadmap", "Procurement support", "Governance packet", "Executive reporting"]
+    }
+  ],
+  "dashboard": {
+    "progress": 68,
+    "phase": "Formation coordination",
+    "stage": "Stage 4 of 8",
+    "health": "On track",
+    "estimatedCompletion": "August 30, 2026",
+    "statusText": "Your formation documents are moving through partner review.",
+    "nextAction": {
+      "title": "Approve your registered office",
+      "detail": "Choose between the Kanda and Shibuya addresses so the articles can be finalized.",
+      "owner": "You",
+      "due": "July 16",
+      "timeframe": "About 5 minutes"
+    },
+    "checklist": [
+      { "label": "Founder details confirmed", "complete": true },
+      { "label": "Capital plan approved", "complete": true },
+      { "label": "Registered office shortlisted", "complete": true },
+      { "label": "Articles draft under attorney review", "complete": false },
+      { "label": "Bank appointment preparation", "complete": false }
+    ],
+    "timeline": [
+      { "label": "Business plan", "date": "Jul 15", "status": "Complete" },
+      { "label": "Capital deposit", "date": "Jul 22", "status": "In motion" },
+      { "label": "Formation filing", "date": "Aug 05", "status": "Scheduled" },
+      { "label": "Bank onboarding", "date": "Aug 18", "status": "Waiting" }
+    ],
+    "assignedPartners": [
+      { "role": "Immigration attorney", "name": "Mika Tanaka", "status": "Assigned" },
+      { "role": "Accountant", "name": "Sato Ledger Office", "status": "Assigned" },
+      { "role": "Office provider", "name": "Kanda Works", "status": "Shortlist" }
+    ],
+    "upcomingTasks": [
+      { "task": "Approve office shortlist", "due": "Jul 16", "owner": "Client" },
+      { "task": "Send notarized passport copy", "due": "Jul 18", "owner": "Client" },
+      { "task": "Review articles comments", "due": "Jul 20", "owner": "Attorney" }
+    ],
+    "requiredDocuments": [
+      { "name": "Passport scan", "status": "Received" },
+      { "name": "Proof of address", "status": "Under review" },
+      { "name": "Capital source memo", "status": "Requested" },
+      { "name": "Company seal order", "status": "Complete" }
+    ]
+  },
+  "businessProfile": {
+    "country": "United States",
+    "businessType": "Technology services",
+    "targetCity": "Tokyo",
+    "capital": "JPY 7,500,000",
+    "status": "Formation coordination",
+    "language": "English primary, Japanese support"
+  },
+  "partners": [
+    {
+      "category": "Immigration attorney",
+      "status": "Active",
+      "assigned": "Mika Tanaka",
+      "contact": "mika.tanaka@example.jp",
+      "notes": "Preparing business manager visa route and filing sequence."
+    },
+    {
+      "category": "Accountant",
+      "status": "Active",
+      "assigned": "Sato Ledger Office",
+      "contact": "hello@sato-ledger.example",
+      "notes": "Tax registration checklist ready after formation."
+    },
+    {
+      "category": "Judicial scrivener",
+      "status": "Pending",
+      "assigned": "Nomura Legal Desk",
+      "contact": "desk@nomura-shoshi.example",
+      "notes": "Awaiting final capital and office confirmation."
+    },
+    {
+      "category": "Office provider",
+      "status": "Shortlist",
+      "assigned": "Kanda Works",
+      "contact": "support@kandaworks.example",
+      "notes": "Two addresses available for August start."
+    },
+    {
+      "category": "Residential housing",
+      "status": "Discovery",
+      "assigned": "Aoyama Relocation",
+      "contact": "move@aoyama-relocation.example",
+      "notes": "Needs visa timing before lease search begins."
+    },
+    {
+      "category": "Banking",
+      "status": "Queued",
+      "assigned": "Mizuho startup desk",
+      "contact": "startupdesk@example-bank.jp",
+      "notes": "Founder interview packet in progress."
+    },
+    {
+      "category": "Insurance",
+      "status": "Queued",
+      "assigned": "Tokyo Risk Studio",
+      "contact": "hello@tokyorisk.example",
+      "notes": "Basic liability quote after incorporation."
+    }
+  ],
+  "documents": [
+    { "name": "Passport scan", "category": "Identity", "status": "Received", "owner": "Client", "updated": "Jul 11" },
+    { "name": "Proof of address", "category": "Identity", "status": "Under review", "owner": "Hajime", "updated": "Jul 10" },
+    { "name": "Capital source memo", "category": "Banking", "status": "Requested", "owner": "Client", "updated": "Jul 09" },
+    { "name": "Business plan", "category": "Formation", "status": "Complete", "owner": "Hajime", "updated": "Jul 08" },
+    { "name": "Articles draft", "category": "Formation", "status": "Under review", "owner": "Attorney", "updated": "Jul 12" },
+    { "name": "Office agreement", "category": "Office", "status": "Requested", "owner": "Office provider", "updated": "Jul 12" },
+    { "name": "Seal certificate", "category": "Registration", "status": "Requested", "owner": "Client", "updated": "Jul 13" },
+    { "name": "Bank interview packet", "category": "Banking", "status": "Received", "owner": "Hajime", "updated": "Jul 10" }
+  ],
+  "timeline": [
+    { "name": "Business Plan", "start": "Jul 08", "end": "Jul 15", "progress": 100, "lane": "Completed", "owner": "Hajime", "timeframe": "Completed July 15", "next": "No action needed", "note": "Final plan converted into the formation packet." },
+    { "name": "Capital", "start": "Jul 14", "end": "Jul 24", "progress": 45, "lane": "Waiting on You", "owner": "You", "timeframe": "Due July 18", "next": "Upload capital source memo", "note": "Deposit evidence is ready. We need your source memo to close this step." },
+    { "name": "Office", "start": "Jul 16", "end": "Jul 28", "progress": 35, "lane": "Waiting on You", "owner": "You", "timeframe": "Decision by July 16", "next": "Approve one office address", "note": "Two compliant addresses are ready for your selection." },
+    { "name": "Company Formation", "start": "Jul 25", "end": "Aug 06", "progress": 20, "lane": "Waiting on Partner", "owner": "Judicial scrivener", "timeframe": "Expected August 6", "next": "Partner is reviewing the articles", "note": "The judicial scrivener is checking the latest articles draft." },
+    { "name": "Attorney", "start": "Jul 12", "end": "Aug 12", "progress": 52, "lane": "In Progress", "owner": "Mika Tanaka", "timeframe": "Expected August 12", "next": "Immigration route review", "note": "The immigration route is aligned with the formation sequence." },
+    { "name": "Bank", "start": "Aug 08", "end": "Aug 22", "progress": 8, "lane": "Upcoming", "owner": "Banking partner", "timeframe": "Starts August 8", "next": "Hajime prepares interview packet", "note": "The interview packet is being prepared in advance." },
+    { "name": "Registration", "start": "Aug 01", "end": "Aug 14", "progress": 12, "lane": "Upcoming", "owner": "Judicial scrivener", "timeframe": "Expected August 14", "next": "Begins after capital and office", "note": "Registration begins as soon as capital and office are final." },
+    { "name": "Completion", "start": "Aug 22", "end": "Aug 30", "progress": 0, "lane": "Upcoming", "owner": "Hajime", "timeframe": "Expected August 30", "next": "Final operating packet", "note": "Hajime will deliver the operating packet and tax handoff." }
+  ],
+  "admin": {
+    "attention": [
+      { "label": "Blocked projects", "value": "3", "tone": "critical", "detail": "2 partner, 1 government" },
+      { "label": "Overdue tasks", "value": "8", "tone": "critical", "detail": "Oldest is 4 days late" },
+      { "label": "Awaiting clients", "value": "6", "tone": "warning", "detail": "4 due within 48 hours" },
+      { "label": "Nearing completion", "value": "5", "tone": "positive", "detail": "Expected this month" }
+    ],
+    "bottlenecks": [
+      { "partner": "Nomura Legal Desk", "projects": "4 projects", "issue": "Articles review", "delay": "+3 days" },
+      { "partner": "Mizuho startup desk", "projects": "3 projects", "issue": "Meeting availability", "delay": "+2 days" }
+    ],
+    "summary": [
+      { "label": "Active clients", "value": "24" },
+      { "label": "Monthly revenue", "value": "$182k" },
+      { "label": "Open tasks", "value": "71" },
+      { "label": "Partner load", "value": "86%" }
+    ],
+    "clients": [
+      {
+        "name": "Northstar Robotics K.K.",
+        "status": "Formation coordination",
+        "signal": "Awaiting client",
+        "revenue": "$9,500",
+        "openTasks": 7,
+        "partnerAssignments": "5 active",
+        "notes": "Capital memo due this week."
+      },
+      {
+        "name": "Blue Edo Foods",
+        "status": "Bank onboarding",
+        "signal": "On track",
+        "revenue": "$3,800",
+        "openTasks": 4,
+        "partnerAssignments": "3 active",
+        "notes": "Bank meeting confirmed."
+      },
+      {
+        "name": "Orbit Market Japan",
+        "status": "Discovery",
+        "signal": "Overdue",
+        "revenue": "$490",
+        "openTasks": 2,
+        "partnerAssignments": "1 pending",
+        "notes": "Choosing between Osaka and Tokyo."
+      },
+      {
+        "name": "Kumo Analytics",
+        "status": "Enterprise scoping",
+        "signal": "Partner blocked",
+        "revenue": "Custom",
+        "openTasks": 9,
+        "partnerAssignments": "6 active",
+        "notes": "Procurement review requested."
+      },
+      {
+        "name": "Aster Design Lab",
+        "status": "Completion",
+        "signal": "Nearing completion",
+        "revenue": "$9,500",
+        "openTasks": 1,
+        "partnerAssignments": "4 active",
+        "notes": "Final operating packet ready."
+      }
+    ]
+  }
+}

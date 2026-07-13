@@ -5,10 +5,7 @@ const baseUrl = "http://127.0.0.1:3100";
 const environment = {
   ...process.env,
   NEXT_DIST_DIR: ".next-smoke",
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "sb_publishable_test",
-  NEXT_PUBLIC_SUPABASE_URL:
-    process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://127.0.0.1:54321",
+  NEXT_PUBLIC_SITE_URL: baseUrl,
 };
 
 const server = spawn(

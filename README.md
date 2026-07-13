@@ -18,7 +18,7 @@ Copy-Item .env.example .env.local
 npm.cmd run dev
 ```
 
-Apply the migration in `apps/web/supabase/migrations` to the configured Supabase project before using authenticated project routes. See [apps/web/README.md](apps/web/README.md) for setup and verification.
+Set `DATABASE_URL` to the Neon PostgreSQL connection string and run `npm.cmd run db:migrate` before using authenticated project routes. See [apps/web/README.md](apps/web/README.md) for setup and verification.
 
 ## Electron prototype
 

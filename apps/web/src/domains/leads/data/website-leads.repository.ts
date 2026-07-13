@@ -1,23 +1,24 @@
 import "server-only";
 
 import type { WebsiteLeadInput } from "@/domains/leads/schemas/website-lead.schema";
-import { getWebsiteLeadEnvironment } from "@/shared/env/supabase";
-import { createSupabaseAdminClient } from "@/shared/supabase/admin";
+import { queryDatabase } from "@/shared/database/pool";
+import { getWebsiteLeadEnvironment } from "@/shared/env/database";
 
 export async function createWebsiteLead(input: WebsiteLeadInput) {
   const { ownerId } = getWebsiteLeadEnvironment();
-  const supabase = createSupabaseAdminClient();
-  const { error } = await supabase.from("leads").insert({
-    owner_id: ownerId,
-    name: input.name,
-    email: input.email,
-    country: input.country,
-    business_type: input.currentBusiness,
-    discovery_desired_timeline: input.targetTimeline,
-    notes: input.currentSituation,
-    source: "website",
-    status: "new",
-  });
-
-  if (error) throw error;
+  await queryDatabase(
+    `insert into leads (
+      owner_id, name, email, country, business_type,
+      discovery_desired_timeline, notes, source, status
+    ) values ($1, $2, $3, $4, $5, $6, $7, 'website', 'new')`,
+    [
+      ownerId,
+      input.name,
+      input.email,
+      input.country,
+      input.currentBusiness,
+      input.targetTimeline,
+      input.currentSituation,
+    ],
+  );
 }

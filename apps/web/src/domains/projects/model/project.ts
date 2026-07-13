@@ -1,7 +1,3 @@
-import type { Database } from "@/shared/supabase/database.types";
-
-export type Project = Database["public"]["Tables"]["projects"]["Row"];
-
 export const PROJECT_COUNTRIES = [{ value: "JP", label: "Japan" }] as const;
 
 export const PROJECT_PACKAGES = [
@@ -10,6 +6,8 @@ export const PROJECT_PACKAGES = [
   "concierge",
   "enterprise",
 ] as const;
+
+export type ProjectPackage = (typeof PROJECT_PACKAGES)[number];
 
 export const PROJECT_PACKAGE_LABELS: Record<Project["package"], string> = {
   diy_blueprint: "DIY Blueprint",
@@ -30,6 +28,8 @@ export const PROJECT_STAGES = [
   "completed",
 ] as const;
 
+export type ProjectStage = (typeof PROJECT_STAGES)[number];
+
 export const PROJECT_STAGE_LABELS: Record<Project["current_stage"], string> = {
   prospect: "Prospect",
   client: "Client",
@@ -48,6 +48,23 @@ export const PROJECT_HEALTH_VALUES = [
   "blocked",
   "paused",
 ] as const;
+
+export type ProjectHealth = (typeof PROJECT_HEALTH_VALUES)[number];
+
+export type Project = {
+  archived_at: string | null;
+  coordinator_name: string | null;
+  country_code: string;
+  created_at: string;
+  current_stage: ProjectStage;
+  estimated_completion: string | null;
+  health: ProjectHealth;
+  id: string;
+  name: string;
+  owner_id: string;
+  package: ProjectPackage;
+  updated_at: string;
+};
 
 export const PROJECT_HEALTH_LABELS: Record<Project["health"], string> = {
   on_track: "On track",

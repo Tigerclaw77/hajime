@@ -1,9 +1,9 @@
 create extension if not exists citext;
 
-create table public.leads (
+create table leads (
   id uuid primary key default gen_random_uuid(),
-  owner_id uuid not null references auth.users(id) on delete cascade,
-  project_id uuid unique references public.projects(id) on delete restrict,
+  owner_id uuid not null references "user"(id) on delete cascade,
+  project_id uuid unique references projects(id) on delete restrict,
   name text not null check (char_length(trim(name)) between 2 and 120),
   email citext not null check (char_length(trim(email::text)) between 3 and 320),
   country text not null check (char_length(trim(country)) between 2 and 100),
@@ -35,103 +35,54 @@ create table public.leads (
   )
 );
 
-comment on table public.leads is 'Founder-led acquisition aggregate with one current discovery and proposal state.';
-comment on column public.leads.project_id is 'Permanent one-to-one conversion link. Set only by convert_lead_to_project.';
-comment on column public.leads.currency_code is 'Phase 2 commercial display currency. Expand only with explicit multi-currency policy.';
-
-create index leads_owner_status_updated_idx
-  on public.leads (owner_id, status, updated_at desc);
+create index leads_owner_status_updated_idx on leads (owner_id, status, updated_at desc);
 
 create unique index leads_owner_email_active_idx
-  on public.leads (owner_id, email)
+  on leads (owner_id, email)
   where status <> 'archived';
 
 create trigger leads_set_updated_at
-before update on public.leads
-for each row execute function public.set_updated_at();
+before update on leads
+for each row execute function set_updated_at();
 
-alter table public.leads enable row level security;
-
-create policy "Users can view their own leads"
-on public.leads for select
-to authenticated
-using ((select auth.uid()) = owner_id);
-
-create policy "Users can create their own leads"
-on public.leads for insert
-to authenticated
-with check (
-  (select auth.uid()) = owner_id
-  and project_id is null
-  and status <> 'won'
-);
-
-create policy "Users can update their own leads"
-on public.leads for update
-to authenticated
-using ((select auth.uid()) = owner_id)
-with check ((select auth.uid()) = owner_id);
-
-revoke delete on table public.leads from authenticated;
-
-create or replace function public.convert_lead_to_project(target_lead_id uuid)
+create or replace function convert_lead_to_project(
+  current_owner_id uuid,
+  target_lead_id uuid
+)
 returns uuid
 language plpgsql
-security definer
-set search_path = ''
 as $$
 declare
-  current_user_id uuid := auth.uid();
-  current_lead public.leads%rowtype;
+  current_lead leads%rowtype;
   created_project_id uuid;
 begin
-  if current_user_id is null then
-    raise exception 'Authentication required';
-  end if;
-
-  select *
-  into current_lead
-  from public.leads
-  where id = target_lead_id and owner_id = current_user_id
+  select * into current_lead
+  from leads
+  where id = target_lead_id and owner_id = current_owner_id
   for update;
 
-  if not found then
-    raise exception 'Lead not found';
-  end if;
-
-  if current_lead.project_id is not null then
-    return current_lead.project_id;
-  end if;
-
+  if not found then raise exception 'Lead not found'; end if;
+  if current_lead.project_id is not null then return current_lead.project_id; end if;
   if current_lead.status in ('lost', 'archived') then
     raise exception 'Lead must be active before conversion';
   end if;
-
   if current_lead.proposal_package is null then
     raise exception 'A proposed package is required before conversion';
   end if;
 
-  insert into public.projects (
-    owner_id,
-    name,
-    country_code,
-    package,
-    current_stage,
-    health,
-    coordinator_name
+  insert into projects (
+    owner_id, name, country_code, package, current_stage, health, coordinator_name
   ) values (
-    current_user_id,
+    current_owner_id,
     trim(current_lead.name) || ' Japan Launch',
     'JP',
     current_lead.proposal_package,
     'client',
     'on_track',
     current_lead.coordinator_name
-  )
-  returning id into created_project_id;
+  ) returning id into created_project_id;
 
-  update public.leads
-  set
+  update leads set
     project_id = created_project_id,
     status = 'won',
     proposal_outcome = 'accepted'
@@ -140,6 +91,3 @@ begin
   return created_project_id;
 end;
 $$;
-
-revoke all on function public.convert_lead_to_project(uuid) from public;
-grant execute on function public.convert_lead_to_project(uuid) to authenticated;

@@ -1,6 +1,4 @@
-import type { Database } from "@/shared/supabase/database.types";
-
-export type Lead = Database["public"]["Tables"]["leads"]["Row"];
+import type { ProjectPackage } from "@/domains/projects/model/project";
 
 export const LEAD_SOURCES = [
   "referral",
@@ -11,6 +9,8 @@ export const LEAD_SOURCES = [
   "outbound",
   "other",
 ] as const;
+
+export type LeadSource = (typeof LEAD_SOURCES)[number];
 
 export const LEAD_SOURCE_LABELS: Record<Lead["source"], string> = {
   referral: "Referral",
@@ -32,6 +32,8 @@ export const LEAD_STATUSES = [
   "lost",
   "archived",
 ] as const;
+
+export type LeadStatus = (typeof LEAD_STATUSES)[number];
 
 export const MANUAL_LEAD_STATUSES = LEAD_STATUSES.filter(
   (status) => status !== "paid",
@@ -55,6 +57,37 @@ export const PROPOSAL_OUTCOMES = [
   "expired",
   "superseded",
 ] as const;
+
+export type ProposalOutcome = (typeof PROPOSAL_OUTCOMES)[number];
+
+export type Lead = {
+  business_type: string;
+  coordinator_name: string | null;
+  country: string;
+  created_at: string;
+  currency_code: "USD";
+  discovery_budget_estimate_minor: number | null;
+  discovery_desired_timeline: string;
+  discovery_key_concerns: string;
+  discovery_meeting_date: string | null;
+  discovery_next_action: string;
+  discovery_summary: string;
+  email: string;
+  id: string;
+  name: string;
+  notes: string;
+  owner_id: string;
+  project_id: string | null;
+  proposal_expiration_date: string | null;
+  proposal_expected_value_minor: number | null;
+  proposal_outcome: ProposalOutcome;
+  proposal_package: ProjectPackage | null;
+  proposal_sent_date: string | null;
+  source: LeadSource;
+  status: LeadStatus;
+  stripe_customer_id: string | null;
+  updated_at: string;
+};
 
 export const PROPOSAL_OUTCOME_LABELS: Record<Lead["proposal_outcome"], string> = {
   open: "Open",

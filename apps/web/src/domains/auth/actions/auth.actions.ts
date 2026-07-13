@@ -3,9 +3,9 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { authSchema, type AuthInput } from "@/domains/auth/schemas/auth.schema";
+import { getAuth } from "@/domains/auth/server/auth";
 import type { ActionResult } from "@/shared/actions/action-result";
 import { validationError } from "@/shared/actions/action-result";
-import { createSupabaseServerClient } from "@/shared/supabase/server";
 
 type SignUpResult = { requiresEmailConfirmation: boolean };
 
@@ -15,10 +15,12 @@ export async function signInAction(
   const parsed = authSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error.flatten().fieldErrors);
 
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
-
-  if (error) {
+  try {
+    await getAuth().api.signInEmail({
+      body: parsed.data,
+      headers: await headers(),
+    });
+  } catch {
     return { ok: false, message: "Email or password is incorrect." };
   }
 
@@ -33,26 +35,25 @@ export async function signUpAction(
     return validationError<SignUpResult>(parsed.error.flatten().fieldErrors);
   }
 
-  const requestHeaders = await headers();
-  const origin = requestHeaders.get("origin") ?? "http://localhost:3000";
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase.auth.signUp({
-    ...parsed.data,
-    options: { emailRedirectTo: `${origin}/auth/callback` },
-  });
-
-  if (error) {
-    return { ok: false, message: error.message };
+  try {
+    await getAuth().api.signUpEmail({
+      body: {
+        ...parsed.data,
+        name: parsed.data.email.split("@")[0] || parsed.data.email,
+      },
+      headers: await headers(),
+    });
+  } catch {
+    return { ok: false, message: "We could not create this account." };
   }
 
   return {
     ok: true,
-    data: { requiresEmailConfirmation: !data.session },
+    data: { requiresEmailConfirmation: false },
   };
 }
 
 export async function signOutAction() {
-  const supabase = await createSupabaseServerClient();
-  await supabase.auth.signOut();
+  await getAuth().api.signOut({ headers: await headers() });
   redirect("/sign-in");
 }

@@ -1,16 +1,16 @@
 import "server-only";
 
 import type { SubscriberInput } from "@/domains/subscribers/schemas/subscriber.schema";
-import { createSupabaseAdminClient } from "@/shared/supabase/admin";
+import { queryDatabase } from "@/shared/database/pool";
 
 export async function createOrUpdateSubscriber(input: SubscriberInput) {
-  const supabase = createSupabaseAdminClient();
-  const { error } = await supabase.from("subscribers").upsert({
-    email: input.email.toLowerCase(),
-    interests: input.interests,
-    status: "active",
-    updated_at: new Date().toISOString(),
-  }, { onConflict: "email" });
-
-  if (error) throw error;
+  await queryDatabase(
+    `insert into subscribers (email, interests, status)
+     values ($1, $2, 'active')
+     on conflict (email) do update set
+       interests = excluded.interests,
+       status = 'active',
+       updated_at = timezone('utc', now())`,
+    [input.email.toLowerCase(), input.interests],
+  );
 }

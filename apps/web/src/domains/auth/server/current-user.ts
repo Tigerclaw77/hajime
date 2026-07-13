@@ -1,15 +1,12 @@
 import "server-only";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createSupabaseServerClient } from "@/shared/supabase/server";
+import { getAuth } from "@/domains/auth/server/auth";
 
 export async function getCurrentUser() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  return user;
+  const session = await getAuth().api.getSession({ headers: await headers() });
+  return session?.user ?? null;
 }
 
 export async function requireCurrentUser() {

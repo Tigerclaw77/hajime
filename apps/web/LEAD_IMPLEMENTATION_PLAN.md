@@ -59,7 +59,7 @@ No partially converted state can be committed.
 - Every Lead row carries the authenticated `owner_id`.
 - RLS protects select, insert, and update.
 - Authenticated users receive no delete permission.
-- The conversion function is security-definer only to complete the cross-table transaction; it validates `auth.uid()` and lead ownership before any write.
+- The conversion function accepts the server-verified owner ID, validates lead ownership, and completes the cross-table transaction atomically.
 - The public role cannot execute conversion.
 - An active email can identify only one lead per owner.
 - Archived leads are read-only in the application.

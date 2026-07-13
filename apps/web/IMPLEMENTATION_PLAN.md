@@ -22,8 +22,8 @@ Where Phase 1 intentionally simplifies the source model, the simplification is d
 
 ### Authentication
 
-- Email/password sign-up and sign-in through Supabase Auth.
-- Cookie-based server-side session handling through `@supabase/ssr`.
+- Email/password sign-up and sign-in through Better Auth.
+- Cookie-based server-side sessions stored in Neon PostgreSQL.
 - Authenticated application layout.
 - Sign-out.
 - Secure server checks for every project query and mutation.
@@ -39,12 +39,12 @@ Where Phase 1 intentionally simplifies the source model, the simplification is d
 
 ### Data protection
 
-- Owner-scoped row-level security.
+- Owner-scoped server repositories and guarded database functions.
 - No client-provided owner ID.
 - No hard delete grant for authenticated users.
 - Database checks mirror domain values.
 - Server-side Zod validation on every mutation.
-- Current user verified through Supabase Auth before data access.
+- Current user verified through Better Auth before data access.
 
 ### Quality foundation
 
@@ -67,7 +67,7 @@ Owns authentication input, auth actions, and current-user policy. It does not ow
 
 ### `shared`
 
-Contains only cross-domain infrastructure with an established second consumer or clear platform role: Supabase client creation, environment validation, action results, and date formatting. It is intentionally not a generic `lib` directory.
+Contains only cross-domain infrastructure with an established second consumer or clear platform role: PostgreSQL connection management, environment validation, action results, and date formatting. It is intentionally not a generic `lib` directory.
 
 ### `app`
 
@@ -77,8 +77,8 @@ Composes routes and pages. Pages retrieve data through domain repositories and m
 
 1. Create an isolated Next.js application beside the Electron prototype.
 2. Pin supported framework and test versions.
-3. Define and migrate the minimal projects table with RLS.
-4. Add server-side Supabase auth and callback handling.
+3. Define and migrate the minimal projects table with owner constraints.
+4. Add server-side Better Auth session handling.
 5. Define project vocabulary and Zod validation.
 6. Implement the server-only project repository.
 7. Implement Server Actions that validate and revalidate routes.
@@ -96,7 +96,7 @@ Composes routes and pages. Pages retrieve data through domain repositories and m
 - Archived projects are read-only in the application.
 - Authenticated routes are dynamically rendered and do not cache user sessions.
 - Public authentication pages are smoke-tested.
-- Full project CRUD smoke coverage can run against a test Supabase project.
+- Full project CRUD smoke coverage can run against a test Neon branch.
 - Lint, typecheck, unit tests, production build, and dependency audit pass.
 - No out-of-scope domain or placeholder feature is introduced.
 
@@ -118,6 +118,6 @@ Composes routes and pages. Pages retrieve data through domain repositories and m
 
 ## Next-phase gate
 
-No second domain should begin until Phase 1 runs against a real Supabase staging project, authenticated smoke coverage passes, deployment and recovery are demonstrated, and the temporary ownership model has an approved evolution path.
+No second domain should begin until Phase 1 runs against a real Neon staging branch, authenticated smoke coverage passes, deployment and recovery are demonstrated, and the temporary ownership model has an approved evolution path.
 
 The next vertical slice should be selected from a real operating need, not from the architecture document's full entity list.

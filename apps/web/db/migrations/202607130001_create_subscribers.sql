@@ -1,4 +1,4 @@
-create table public.subscribers (
+create table subscribers (
   id uuid primary key default gen_random_uuid(),
   email text not null,
   interests text[] not null default '{}',
@@ -8,8 +8,4 @@ create table public.subscribers (
   constraint subscribers_email_normalized check (email = lower(email))
 );
 
-create unique index subscribers_email_key on public.subscribers (email);
-
-alter table public.subscribers enable row level security;
-
-comment on table public.subscribers is 'Public formation-update subscriptions. Writes use the server-only service role.';
+create unique index subscribers_email_key on subscribers (email);

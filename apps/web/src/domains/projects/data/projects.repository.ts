@@ -1,100 +1,103 @@
 import "server-only";
 
-import type { ProjectFormInput } from "@/domains/projects/schemas/project.schema";
 import { requireCurrentUser } from "@/domains/auth/server/current-user";
-import { createSupabaseServerClient } from "@/shared/supabase/server";
-import type { Database } from "@/shared/supabase/database.types";
+import type { Project } from "@/domains/projects/model/project";
+import type { ProjectFormInput } from "@/domains/projects/schemas/project.schema";
+import { queryDatabase } from "@/shared/database/pool";
+import { nullableTimestampToIso, timestampToIso } from "@/shared/database/values";
 
-type ProjectInsert = Database["public"]["Tables"]["projects"]["Insert"];
-type ProjectUpdate = Database["public"]["Tables"]["projects"]["Update"];
+type ProjectDatabaseRow = Omit<Project, "archived_at" | "created_at" | "updated_at"> & {
+  archived_at: Date | string | null;
+  created_at: Date | string;
+  updated_at: Date | string;
+};
 
-function toProjectValues(input: ProjectFormInput): ProjectUpdate {
+function normalizeProject(project: ProjectDatabaseRow): Project {
   return {
-    coordinator_name: input.coordinatorName || null,
-    country_code: input.countryCode,
-    current_stage: input.currentStage,
-    estimated_completion: input.estimatedCompletion || null,
-    health: input.health,
-    name: input.name,
-    package: input.package,
+    ...project,
+    archived_at: nullableTimestampToIso(project.archived_at),
+    created_at: timestampToIso(project.created_at),
+    updated_at: timestampToIso(project.updated_at),
   };
 }
 
 export async function listProjects() {
   const user = await requireCurrentUser();
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("owner_id", user.id)
-    .order("updated_at", { ascending: false });
-
-  if (error) throw error;
+  const rows = await queryDatabase<ProjectDatabaseRow>(
+    `select * from projects where owner_id = $1 order by updated_at desc`,
+    [user.id],
+  );
+  const projects = rows.map(normalizeProject);
   return {
-    active: data.filter((project) => !project.archived_at),
-    archived: data.filter((project) => Boolean(project.archived_at)),
+    active: projects.filter((project) => !project.archived_at),
+    archived: projects.filter((project) => Boolean(project.archived_at)),
   };
 }
 
 export async function getProject(projectId: string) {
   const user = await requireCurrentUser();
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("id", projectId)
-    .eq("owner_id", user.id)
-    .maybeSingle();
-
-  if (error) throw error;
-  return data;
+  const rows = await queryDatabase<ProjectDatabaseRow>(
+    `select * from projects where id = $1 and owner_id = $2 limit 1`,
+    [projectId, user.id],
+  );
+  return rows[0] ? normalizeProject(rows[0]) : null;
 }
 
 export async function createProject(input: ProjectFormInput) {
   const user = await requireCurrentUser();
-  const supabase = await createSupabaseServerClient();
-  const values: ProjectInsert = {
-    ...toProjectValues(input),
-    country_code: input.countryCode,
-    current_stage: input.currentStage,
-    health: input.health,
-    name: input.name,
-    owner_id: user.id,
-    package: input.package,
-  };
-
-  const { data, error } = await supabase
-    .from("projects")
-    .insert(values)
-    .select("id")
-    .single();
-
-  if (error) throw error;
-  return data.id;
+  const rows = await queryDatabase<{ id: string }>(
+    `insert into projects (
+      owner_id, name, country_code, package, current_stage, health,
+      estimated_completion, coordinator_name
+    ) values ($1, $2, $3, $4, $5, $6, $7, $8)
+    returning id`,
+    [
+      user.id,
+      input.name,
+      input.countryCode,
+      input.package,
+      input.currentStage,
+      input.health,
+      input.estimatedCompletion || null,
+      input.coordinatorName || null,
+    ],
+  );
+  if (!rows[0]) throw new Error("Project creation did not return an id.");
+  return rows[0].id;
 }
 
 export async function updateProject(projectId: string, input: ProjectFormInput) {
   const user = await requireCurrentUser();
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase
-    .from("projects")
-    .update(toProjectValues(input))
-    .eq("id", projectId)
-    .eq("owner_id", user.id)
-    .is("archived_at", null);
-
-  if (error) throw error;
+  await queryDatabase(
+    `update projects set
+      name = $1,
+      country_code = $2,
+      package = $3,
+      current_stage = $4,
+      health = $5,
+      estimated_completion = $6,
+      coordinator_name = $7
+    where id = $8 and owner_id = $9 and archived_at is null`,
+    [
+      input.name,
+      input.countryCode,
+      input.package,
+      input.currentStage,
+      input.health,
+      input.estimatedCompletion || null,
+      input.coordinatorName || null,
+      projectId,
+      user.id,
+    ],
+  );
 }
 
 export async function archiveProject(projectId: string) {
   const user = await requireCurrentUser();
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase
-    .from("projects")
-    .update({ archived_at: new Date().toISOString() })
-    .eq("id", projectId)
-    .eq("owner_id", user.id)
-    .is("archived_at", null);
-
-  if (error) throw error;
+  await queryDatabase(
+    `update projects
+     set archived_at = timezone('utc', now())
+     where id = $1 and owner_id = $2 and archived_at is null`,
+    [projectId, user.id],
+  );
 }

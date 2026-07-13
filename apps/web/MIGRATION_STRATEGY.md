@@ -18,25 +18,25 @@ The business and architecture documents remain the source of truth and are not d
 
 ## Database migration authority
 
-Supabase SQL migrations are the sole database schema authority in Phase 1.
+The SQL files in `db/migrations` are the sole Neon PostgreSQL schema authority.
 
 - Migrations are forward-only and reviewed.
 - Production changes are never made solely through an unrecorded dashboard edit.
-- Row-security policies are versioned with table changes.
-- Generated Supabase database types should replace the checked-in type snapshot after connection to a real project.
+- Ownership constraints and transactional functions are versioned with table changes.
+- The migration runner records and verifies a SHA-256 checksum for every applied migration.
 - Rollback is a new corrective migration unless a failed deployment has not reached shared environments.
 
-Prisma is not introduced because it would create a second schema and migration authority without adding value to this single-table, Supabase-native slice.
+Prisma is not introduced because it would create a second schema and migration authority without adding value to these focused PostgreSQL repositories.
 
 ## Environment progression
 
 ### Local development
 
-Use a local Supabase stack or a dedicated development project. Developer accounts and records are disposable.
+Use a disposable Neon development branch or local PostgreSQL database. Developer accounts and records are disposable.
 
 ### Staging
 
-Use a separate Supabase project with production-like Auth, RLS, redirect configuration, and migrations. Run authenticated smoke tests after every migration and deployment.
+Use a separate Neon branch with production-like Better Auth configuration and migrations. Run authenticated smoke tests after every migration and deployment.
 
 ### Production
 
@@ -46,7 +46,7 @@ Use an isolated project, reviewed migration process, backups, recovery checks, r
 
 ### Owner
 
-`owner_id` references `auth.users` and acts as the temporary tenant boundary. It is appropriate only while one authenticated user owns a project.
+`owner_id` references the Better Auth `user` table and acts as the temporary tenant boundary. It is appropriate only while one authenticated user owns a project.
 
 Before client teams, coordinators, partners, auditors, or support users share access:
 
@@ -54,7 +54,7 @@ Before client teams, coordinators, partners, auditors, or support users share ac
 2. Create one workspace for each existing owner.
 3. Add `workspace_id` to projects and backfill from owner workspaces.
 4. Introduce scoped roles and project assignments.
-5. Replace owner-only RLS with membership-aware policies.
+5. Replace owner-only repository predicates with membership-aware authorization.
 6. Validate every existing project through staging migration rehearsal.
 7. Retain `owner_id` temporarily for provenance, then retire it through a later migration.
 
@@ -128,8 +128,8 @@ For each new vertical slice:
 
 1. Confirm the source-of-truth business outcome.
 2. Write or update an architecture decision.
-3. Add the smallest schema and RLS policy.
-4. Generate database types.
+3. Add the smallest schema and ownership constraints.
+4. Add explicit repository row types.
 5. Implement one domain repository and action boundary.
 6. Rehearse migration with staging data.
 7. Add unit, integration, and smoke coverage proportional to risk.

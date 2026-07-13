@@ -16,29 +16,29 @@
 
 **Consequence**: Authenticated layouts are forced dynamic. Route parameters and request APIs follow current asynchronous Next.js conventions.
 
-## ADR-003: Use Supabase as the Phase 1 platform boundary
+## ADR-003: Use Neon PostgreSQL as the persistence boundary
 
-**Decision**: Use Supabase Auth, Postgres, migrations, typed client, and row-level security.
+**Decision**: Use Neon PostgreSQL, Better Auth, checked-in SQL migrations, and server-only parameterized repositories.
 
-**Why**: One platform supplies authentication and secure row-level data access with a small operating footprint. The architecture can prove production behavior without building a custom identity or API service.
+**Why**: Neon provides managed PostgreSQL while Better Auth keeps identity and sessions in the same production database. Domain repositories retain explicit ownership and transaction boundaries without a second database platform.
 
-**Consequence**: Supabase project configuration and migration discipline are production dependencies. A future exit would require replacing auth/session handling and data access, but domain validation and page composition remain isolated.
+**Consequence**: A pooled Neon connection string, Better Auth secret, and forward-only migration discipline are production dependencies. Database access remains server-only.
 
 ## ADR-004: Do not use Prisma
 
 **Decision**: Do not install Prisma in Phase 1.
 
-**Why**: Supabase migrations already own the schema, and the typed Supabase client covers the single project aggregate. Prisma would add a schema, generator, connection path, and migration authority without solving a current problem.
+**Why**: Checked-in PostgreSQL migrations already own the schema, and the domain repositories use focused parameterized SQL. Prisma would add a second schema and migration authority without solving a current problem.
 
-**Revisit when**: The platform needs complex server-side transactions, query patterns poorly served by the Supabase client, database portability, or a separate service boundary. Revisit through a new ADR, not by incremental convenience imports.
+**Revisit when**: Query volume or schema complexity makes generated query types materially reduce risk. Revisit through a new ADR, not by incremental convenience imports.
 
 ## ADR-005: Enforce authorization twice
 
-**Decision**: Verify the authenticated user in the server data-access layer and enforce project ownership through Postgres RLS.
+**Decision**: Verify the authenticated user in the server data-access layer and include ownership in every protected SQL statement and transactional function.
 
-**Why**: Server checks provide clear application behavior; RLS protects the database if a query omits an ownership filter or a future client access path is introduced.
+**Why**: The browser never receives database credentials. Session verification and owner predicates keep authorization close to each server-only data operation.
 
-**Consequence**: Ownership filters in repositories are intentionally redundant. They aid query intent and do not replace RLS.
+**Consequence**: Direct browser database access is prohibited. Any future data access path must preserve explicit owner scoping or introduce a separately reviewed database authorization model.
 
 ## ADR-006: Use Server Actions for mutations
 
@@ -100,7 +100,7 @@
 
 **Decision**: Use Vitest for deterministic domain validation and presenters, and Playwright for browser smoke coverage. The full authenticated CRUD smoke is environment-gated.
 
-**Why**: Pure rules should run quickly without infrastructure. Auth, cookies, RLS, Server Actions, and persistence need a real staging Supabase project to be meaningful.
+**Why**: Pure rules should run quickly without infrastructure. Auth, cookies, Server Actions, owner scoping, and persistence need a real Neon staging branch to be meaningful.
 
 **Consequence**: CI must provide a dedicated test project and credentials before authenticated smoke is considered a deployment gate. Public auth smoke remains available without external state.
 
@@ -124,9 +124,9 @@
 
 **Decision**: A guarded Postgres function creates the Project, marks the Lead Won, accepts the proposal, and writes the permanent link atomically.
 
-**Why**: Supabase client calls cannot make separate cross-table writes atomic. Partial conversion would corrupt customer provenance and could duplicate projects under retries.
+**Why**: Separate cross-table writes are not atomic. Partial conversion would corrupt customer provenance and could duplicate projects under retries.
 
-**Consequence**: The function is narrowly security-definer, revokes public execution, checks `auth.uid()` and row ownership, locks the lead, requires a proposed package, and returns the existing Project on repeat calls.
+**Consequence**: The function accepts the verified owner ID, checks row ownership, locks the lead, requires a proposed package, and returns the existing Project on repeat calls.
 
 ## ADR-017: Store acquisition money in USD minor units
 

@@ -9,6 +9,7 @@ import type {
 } from "@/domains/leads/schemas/lead.schema";
 import { queryDatabase } from "@/shared/database/pool";
 import {
+  nullableDateToIso,
   nullableInteger,
   timestampToIso,
 } from "@/shared/database/values";
@@ -17,13 +18,19 @@ import { moneyInputToMinor } from "@/shared/format/money";
 type LeadDatabaseRow = Omit<
   Lead,
   | "created_at"
+  | "discovery_meeting_date"
   | "discovery_budget_estimate_minor"
+  | "proposal_expiration_date"
   | "proposal_expected_value_minor"
+  | "proposal_sent_date"
   | "updated_at"
 > & {
   created_at: Date | string;
+  discovery_meeting_date: Date | string | null;
   discovery_budget_estimate_minor: number | string | null;
+  proposal_expiration_date: Date | string | null;
   proposal_expected_value_minor: number | string | null;
+  proposal_sent_date: Date | string | null;
   updated_at: Date | string;
 };
 
@@ -31,8 +38,11 @@ function normalizeLead(lead: LeadDatabaseRow): Lead {
   return {
     ...lead,
     created_at: timestampToIso(lead.created_at),
+    discovery_meeting_date: nullableDateToIso(lead.discovery_meeting_date),
     discovery_budget_estimate_minor: nullableInteger(lead.discovery_budget_estimate_minor),
+    proposal_expiration_date: nullableDateToIso(lead.proposal_expiration_date),
     proposal_expected_value_minor: nullableInteger(lead.proposal_expected_value_minor),
+    proposal_sent_date: nullableDateToIso(lead.proposal_sent_date),
     updated_at: timestampToIso(lead.updated_at),
   };
 }

@@ -14,7 +14,7 @@ Hajime is a production web application for capturing leads, managing founder-own
 | Database | Neon PostgreSQL 17 using `pg` and checked-in SQL migrations |
 | Authentication | Better Auth email/password sessions stored in Neon |
 | Payments | Stripe Node SDK; one-time Invoices and Payment Links |
-| Email | None configured |
+| Email | None configured; founder reviews CRM manually twice daily |
 | Storage | Neon relational storage only; no file or object storage |
 | Monitoring | Vercel deployment and runtime logs only |
 | Analytics | None configured |
@@ -45,7 +45,7 @@ Hajime is a production web application for capturing leads, managing founder-own
 - Dedicated Hajime Stripe account under Passport Informatics.
 - Invoices and Payment Links only.
 - No ecommerce, subscriptions, carts, or coupons.
-- Production Stripe key and webhook configuration are not yet complete.
+- Test-mode key and webhook are active for launch verification; live credentials are not yet configured.
 
 ## Database
 
@@ -54,7 +54,8 @@ Neon PostgreSQL is the production database. No Supabase dependency remains. Sche
 ## Project Status
 
 - **Phase:** Production launch wiring before the first paying customer.
-- **Blockers:** Create the founder account; configure `HAJIME_WEBSITE_LEAD_OWNER_ID`, `STRIPE_SECRET_KEY`, and `STRIPE_WEBHOOK_SECRET`; complete production lead, subscriber, Invoice, Payment Link, and duplicate-webhook tests.
+- **Blockers:** Complete subscriber, Invoice, Payment Link, and duplicate-webhook tests; replace test Stripe credentials with live credentials before accepting payment.
+- **Accepted limitation:** The founder reviews CRM manually twice daily. No automated notifications will be built until a real customer need or operational incident demonstrates the requirement.
 - **Production URL:** https://hajime-blue.vercel.app
 
 ## Engineering Rules

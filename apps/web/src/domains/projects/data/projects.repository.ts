@@ -4,11 +4,19 @@ import { requireCurrentUser } from "@/domains/auth/server/current-user";
 import type { Project } from "@/domains/projects/model/project";
 import type { ProjectFormInput } from "@/domains/projects/schemas/project.schema";
 import { queryDatabase } from "@/shared/database/pool";
-import { nullableTimestampToIso, timestampToIso } from "@/shared/database/values";
+import {
+  nullableDateToIso,
+  nullableTimestampToIso,
+  timestampToIso,
+} from "@/shared/database/values";
 
-type ProjectDatabaseRow = Omit<Project, "archived_at" | "created_at" | "updated_at"> & {
+type ProjectDatabaseRow = Omit<
+  Project,
+  "archived_at" | "created_at" | "estimated_completion" | "updated_at"
+> & {
   archived_at: Date | string | null;
   created_at: Date | string;
+  estimated_completion: Date | string | null;
   updated_at: Date | string;
 };
 
@@ -17,6 +25,7 @@ function normalizeProject(project: ProjectDatabaseRow): Project {
     ...project,
     archived_at: nullableTimestampToIso(project.archived_at),
     created_at: timestampToIso(project.created_at),
+    estimated_completion: nullableDateToIso(project.estimated_completion),
     updated_at: timestampToIso(project.updated_at),
   };
 }

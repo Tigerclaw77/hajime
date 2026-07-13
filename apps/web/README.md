@@ -1,5 +1,7 @@
 # Hajime Web
 
+> Current production decisions are defined only in the repository-root `ARCHITECTURE.md`.
+
 Production foundation for Hajime Japan. The current vertical slices implement:
 
 - Better Auth email/password authentication backed by Neon PostgreSQL.
@@ -11,8 +13,11 @@ Production foundation for Hajime Japan. The current vertical slices implement:
 - Record the current discovery and proposal.
 - Move a lead through the founder-led sales statuses.
 - Convert a Won lead into exactly one permanently linked project.
+- Capture public discovery requests and update subscriptions.
+- Create one-time Stripe Invoices and Payment Links for qualified leads.
+- Convert a paid lead into exactly one linked project through an idempotent webhook.
 
-Email automation, calendar integration, Stripe, invoicing, AI, partners, timelines, documents, notifications, workflows, and advanced permissions are out of scope.
+Email delivery, calendar integration, subscriptions, ecommerce, AI, partners, timelines, document storage, notifications, workflows, and advanced permissions are not implemented.
 
 ## Requirements
 
@@ -52,4 +57,4 @@ Public auth smoke tests run without credentials. To run the authenticated projec
 - `src/app`: routing and page composition only.
 - `db/migrations`: forward-only Neon PostgreSQL schema changes.
 
-Do not add unrelated domain placeholders. New domains enter only with an approved vertical slice and architecture decision.
+Do not add unrelated domain placeholders. New domains require an approved vertical slice reflected in the repository-root `ARCHITECTURE.md`.

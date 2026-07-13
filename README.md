@@ -1,12 +1,14 @@
 # Hajime Japan
 
+> Engineering source of truth: read [ARCHITECTURE.md](ARCHITECTURE.md) before changing production code. Archived architecture documents are historical only.
+
 Hajime Japan is a premium business launch concierge platform.
 
 ## Repository areas
 
-- `apps/web`: production Next.js foundation. Phase 1 contains authentication and Projects only.
+- `apps/web`: production Next.js application for the public site, authentication, leads, projects, subscribers, and one-time payments.
 - `src`, `scripts`: local Electron UX prototype. It remains a mock and is not a production dependency.
-- `docs/architecture`: product architecture and domain source of truth.
+- `docs/archive/architecture`: historical architecture and implementation records; non-authoritative.
 - `docs/business`: business operating manuals and service source of truth.
 
 ## Production web app

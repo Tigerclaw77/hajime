@@ -53,6 +53,25 @@ export async function createStripePaymentAction(
     revalidatePath(`/leads/${id.data}`);
     return { ok: true, data: { paymentUrl: result.paymentUrl } };
   } catch (error) {
+    const stripeError = error && typeof error === "object"
+      ? error as {
+          code?: unknown;
+          message?: unknown;
+          name?: unknown;
+          requestId?: unknown;
+          statusCode?: unknown;
+          type?: unknown;
+        }
+      : {};
+    console.error("Stripe payment request failed", {
+      code: typeof stripeError.code === "string" ? stripeError.code : undefined,
+      leadId: id.data,
+      message: typeof stripeError.message === "string" ? stripeError.message : undefined,
+      name: typeof stripeError.name === "string" ? stripeError.name : undefined,
+      requestId: typeof stripeError.requestId === "string" ? stripeError.requestId : undefined,
+      statusCode: typeof stripeError.statusCode === "number" ? stripeError.statusCode : undefined,
+      type: typeof stripeError.type === "string" ? stripeError.type : undefined,
+    });
     const message = error instanceof Error && error.message.includes("different active payment")
       ? "This lead already has a different active payment request."
       : "Stripe could not finish this payment request. Retry to resume the same request without creating a duplicate.";

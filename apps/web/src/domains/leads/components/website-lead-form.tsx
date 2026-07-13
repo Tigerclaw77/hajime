@@ -42,7 +42,7 @@ export function WebsiteLeadForm() {
         <label className="form-honeypot" aria-hidden="true"><span>Company website</span><input tabIndex={-1} autoComplete="off" {...register("companyWebsite")} /></label>
       </div>
       {formMessage && <p className="form-error" role="alert">{formMessage}</p>}
-      <div className="consultation-submit"><button className="button button-primary button-large" disabled={pending}>{pending ? "Sending..." : "Request discovery call"}</button><p>By submitting, you acknowledge our <Link href="/privacy">Privacy notice</Link>. Do not include sensitive personal or financial documents.</p></div>
+      <div className="consultation-submit"><button className="button button-primary button-large" disabled={pending}>{pending ? "Sending..." : "Request discovery"}</button><p>Hajime responds within one business day. By submitting, you acknowledge our <Link href="/privacy">Privacy notice</Link>. Do not include sensitive personal or financial documents.</p></div>
     </form>
   );
 }

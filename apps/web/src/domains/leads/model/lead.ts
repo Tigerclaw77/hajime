@@ -28,9 +28,14 @@ export const LEAD_STATUSES = [
   "discovery_scheduled",
   "proposal_sent",
   "won",
+  "paid",
   "lost",
   "archived",
 ] as const;
+
+export const MANUAL_LEAD_STATUSES = LEAD_STATUSES.filter(
+  (status) => status !== "paid",
+);
 
 export const LEAD_STATUS_LABELS: Record<Lead["status"], string> = {
   new: "New",
@@ -38,6 +43,7 @@ export const LEAD_STATUS_LABELS: Record<Lead["status"], string> = {
   discovery_scheduled: "Discovery scheduled",
   proposal_sent: "Proposal sent",
   won: "Won",
+  paid: "Paid",
   lost: "Lost",
   archived: "Archived",
 };

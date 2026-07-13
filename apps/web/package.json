@@ -20,10 +20,12 @@
     "@hookform/resolvers": "5.4.0",
     "@supabase/ssr": "0.12.0",
     "@supabase/supabase-js": "2.110.2",
+    "lucide-react": "^0.468.0",
     "next": "16.2.10",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "react-hook-form": "7.81.0",
+    "stripe": "^20.4.0",
     "zod": "4.4.3"
   },
   "devDependencies": {

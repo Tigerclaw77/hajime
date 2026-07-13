@@ -5,6 +5,8 @@ import { LeadStatus } from "@/domains/leads/components/lead-status";
 import { LeadStatusControl } from "@/domains/leads/components/lead-status-control";
 import { getLead } from "@/domains/leads/data/leads.repository";
 import { presentLead } from "@/domains/leads/presenters/lead.presenter";
+import { PaymentPanel } from "@/domains/payments/components/payment-panel";
+import { listLeadPayments } from "@/domains/payments/data/payments.repository";
 import { formatDate, formatDateTime } from "@/shared/format/date";
 import { formatUsdMinor } from "@/shared/format/money";
 
@@ -20,6 +22,7 @@ export default async function LeadPage({ params }: LeadPageProps) {
   const { leadId } = await params;
   const lead = await getLead(leadId);
   if (!lead) notFound();
+  const payments = await listLeadPayments(leadId);
   const presented = presentLead(lead);
   const isArchived = lead.status === "archived";
 
@@ -75,6 +78,8 @@ export default async function LeadPage({ params }: LeadPageProps) {
           </dl>
         </section>
       </div>
+
+      <PaymentPanel lead={lead} payments={payments} />
 
       <section className="notes-section">
         <div className="section-header"><h2>Notes</h2></div>

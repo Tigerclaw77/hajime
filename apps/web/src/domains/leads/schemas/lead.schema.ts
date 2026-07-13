@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LEAD_SOURCES, LEAD_STATUSES, PROPOSAL_OUTCOMES } from "@/domains/leads/model/lead";
+import { LEAD_SOURCES, MANUAL_LEAD_STATUSES, PROPOSAL_OUTCOMES } from "@/domains/leads/model/lead";
 import { PROJECT_PACKAGES } from "@/domains/projects/model/project";
 
 const optionalMoney = z
@@ -46,7 +46,7 @@ export const proposalFormSchema = z
     { message: "Expiration must be on or after the sent date.", path: ["expirationDate"] },
   );
 
-export const leadStatusSchema = z.enum(LEAD_STATUSES);
+export const leadStatusSchema = z.enum(MANUAL_LEAD_STATUSES);
 export const leadIdSchema = z.uuid();
 
 export type LeadFormInput = z.infer<typeof leadFormSchema>;

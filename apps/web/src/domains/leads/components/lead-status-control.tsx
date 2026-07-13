@@ -3,14 +3,18 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { updateLeadStatusAction } from "@/domains/leads/actions/lead.actions";
-import { LEAD_STATUSES, LEAD_STATUS_LABELS, type Lead } from "@/domains/leads/model/lead";
+import { LEAD_STATUS_LABELS, MANUAL_LEAD_STATUSES, type Lead } from "@/domains/leads/model/lead";
 
 export function LeadStatusControl({ lead }: { lead: Lead }) {
   const router = useRouter();
   const [status, setStatus] = useState<Lead["status"]>(lead.status);
   const [message, setMessage] = useState<string>();
   const [pending, startTransition] = useTransition();
-  const statuses = lead.project_id ? (["won", "archived"] as const) : LEAD_STATUSES;
+  const statuses = lead.project_id
+    ? lead.status === "paid"
+      ? (["paid", "archived"] as const)
+      : (["won", "archived"] as const)
+    : MANUAL_LEAD_STATUSES;
 
   function submit() {
     setMessage(undefined);

@@ -132,7 +132,10 @@ export async function saveProposal(leadId: string, input: ProposalFormInput) {
   if (error) throw error;
 }
 
-export async function updateLeadStatus(leadId: string, status: Exclude<LeadStatus, "won">) {
+export async function updateLeadStatus(
+  leadId: string,
+  status: Exclude<LeadStatus, "won" | "paid">,
+) {
   const user = await requireCurrentUser();
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase

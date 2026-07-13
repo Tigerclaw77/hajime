@@ -27,6 +27,7 @@ const lead: Lead = {
   proposal_sent_date: "2026-07-20",
   source: "founder_network",
   status: "proposal_sent",
+  stripe_customer_id: null,
   updated_at: "2026-07-12T00:00:00.000Z",
 };
 

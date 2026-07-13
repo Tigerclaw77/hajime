@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "bootstrap:founder": "node scripts/bootstrap-founder.mjs",
     "db:migrate": "node scripts/migrate.mjs",
     "start": "next start",
     "lint": "eslint .",

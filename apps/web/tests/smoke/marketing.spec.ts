@@ -83,7 +83,7 @@ test("mobile homepage has no horizontal overflow and keeps navigation usable", a
 test("SEO discovery endpoints are generated", async ({ request }) => {
   const [robots, sitemap] = await Promise.all([request.get("/robots.txt"), request.get("/sitemap.xml")]);
   expect(robots.ok()).toBe(true);
-  expect(await robots.text()).toContain("Sitemap:");
+  expect(await robots.text()).toContain("Sitemap: http://127.0.0.1:3100/sitemap.xml");
   expect(sitemap.ok()).toBe(true);
-  expect(await sitemap.text()).toContain("/book-consultation");
+  expect(await sitemap.text()).toContain("<loc>http://127.0.0.1:3100/book-consultation</loc>");
 });

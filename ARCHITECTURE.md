@@ -56,7 +56,7 @@ Neon PostgreSQL is the production database. No Supabase dependency remains. Sche
 - **Phase:** Production launch wiring before the first paying customer.
 - **Blockers:** Complete subscriber, Invoice, Payment Link, and duplicate-webhook tests; replace test Stripe credentials with live credentials before accepting payment.
 - **Accepted limitation:** The founder reviews CRM manually twice daily. No automated notifications will be built until a real customer need or operational incident demonstrates the requirement.
-- **Production URL:** https://hajime-blue.vercel.app
+- **Production URL:** https://hajimejapan.com
 
 ## Engineering Rules
 
